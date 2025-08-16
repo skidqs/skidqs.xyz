@@ -16,6 +16,7 @@ body {
   width: 100vw;
 }
 #canvas { position: fixed; top: 0; left: 0; z-index: 1; }
+
 .dashboard {
   position: relative;
   z-index: 2;
@@ -59,6 +60,10 @@ body {
   <div class="info-box"><div class="info-title">Cookies Enabled</div><div class="info-value" id="cookieInfo">Loading...</div></div>
   <div class="info-box"><div class="info-title">Online Status</div><div class="info-value" id="onlineInfo">Loading...</div></div>
   <div class="info-box"><div class="info-title">Platform</div><div class="info-value" id="platformInfo">Loading...</div></div>
+  <div class="info-box"><div class="info-title">CPU Cores</div><div class="info-value" id="cpuInfo">Loading...</div></div>
+  <div class="info-box"><div class="info-title">Device Memory (GB)</div><div class="info-value" id="memoryInfo">Loading...</div></div>
+  <div class="info-box"><div class="info-title">Timezone</div><div class="info-value" id="timezoneInfo">Loading...</div></div>
+  <div class="info-box"><div class="info-title">Battery Level</div><div class="info-value" id="batteryInfo">Loading...</div></div>
 </div>
 
 <script>
@@ -86,6 +91,17 @@ document.getElementById('langInfo').innerText = navigator.language;
 document.getElementById('cookieInfo').innerText = navigator.cookieEnabled ? 'Yes' : 'No';
 document.getElementById('onlineInfo').innerText = navigator.onLine ? 'Online' : 'Offline';
 document.getElementById('platformInfo').innerText = navigator.platform;
+document.getElementById('cpuInfo').innerText = navigator.hardwareConcurrency || 'Unknown';
+document.getElementById('memoryInfo').innerText = navigator.deviceMemory || 'Unknown';
+document.getElementById('timezoneInfo').innerText = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown';
+
+if(navigator.getBattery){
+  navigator.getBattery().then(bat=>{
+    document.getElementById('batteryInfo').innerText = Math.round(bat.level*100) + '%';
+  });
+}else{
+  document.getElementById('batteryInfo').innerText = 'Unknown';
+}
 
 fetch('https://api.ipify.org?format=json')
 .then(res=>res.json())
