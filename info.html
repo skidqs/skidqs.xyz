@@ -26,7 +26,7 @@
       z-index: 0;
     }
 
-    .info-container {
+    .information-container {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
@@ -36,7 +36,7 @@
       max-width: 1200px;
     }
 
-    .info-box {
+    .information-box {
       background: rgba(0,0,0,0.6);
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 12px;
@@ -45,19 +45,19 @@
       transition: transform 0.3s, background 0.3s;
     }
 
-    .info-box:hover {
+    .information-box:hover {
       transform: scale(1.05);
       background: rgba(255,255,255,0.1);
     }
 
-    .info-box h2 {
+    .information-box h2 {
       font-size: 16px;
       margin-bottom: 12px;
       text-transform: uppercase;
       font-weight: normal;
     }
 
-    .info-box p {
+    .information-box p {
       font-size: 14px;
       line-height: 1.5;
       word-break: break-word;
@@ -68,48 +68,64 @@
 <body>
   <canvas id="canvas"></canvas>
 
-  <div class="info-container">
+  <div class="information-container">
 
-    <div class="info-box">
-      <h2>Browser Info</h2>
-      <p id="browser"></p>
+    <div class="information-box">
+      <h2>Browser Information</h2>
+      <p id="browserName"></p>
       <p id="userAgent"></p>
+      <p id="platform"></p>
+      <p id="vendor"></p>
+      <p id="appVersion"></p>
     </div>
 
-    <div class="info-box">
-      <h2>Device Info</h2>
-      <p id="device"></p>
+    <div class="information-box">
+      <h2>Device Information</h2>
+      <p id="deviceType"></p>
       <p id="cpuCores"></p>
       <p id="memory"></p>
+      <p id="javaEnabled"></p>
+      <p id="touchSupport"></p>
     </div>
 
-    <div class="info-box">
-      <h2>Screen Info</h2>
-      <p id="screen"></p>
+    <div class="information-box">
+      <h2>Screen Information</h2>
+      <p id="screenResolution"></p>
       <p id="colorDepth"></p>
       <p id="pixelRatio"></p>
+      <p id="screenOrientation"></p>
     </div>
 
-    <div class="info-box">
-      <h2>Connection</h2>
-      <p id="online"></p>
+    <div class="information-box">
+      <h2>Connection Information</h2>
+      <p id="onlineStatus"></p>
       <p id="language"></p>
-      <p id="cookies"></p>
+      <p id="cookiesEnabled"></p>
+      <p id="connectionType"></p>
     </div>
 
-    <div class="info-box">
-      <h2>IP & Location</h2>
+    <div class="information-box">
+      <h2>IP & Location Information</h2>
       <p id="ip"></p>
+      <p id="hostname"></p>
       <p id="city"></p>
       <p id="region"></p>
       <p id="country"></p>
+      <p id="org"></p>
+      <p id="postal"></p>
+      <p id="timezone"></p>
+      <p id="loc"></p>
     </div>
 
-    <div class="info-box">
-      <h2>Miscellaneous</h2>
-      <p id="java"></p>
-      <p id="touch"></p>
-      <p id="timezone"></p>
+    <div class="information-box">
+      <h2>Miscellaneous Information</h2>
+      <p id="cookieEnabled"></p>
+      <p id="doNotTrack"></p>
+      <p id="timezoneOffset"></p>
+      <p id="referrer"></p>
+      <p id="connectionDownlink"></p>
+      <p id="connectionRtt"></p>
+      <p id="languageList"></p>
     </div>
   </div>
 
@@ -183,32 +199,48 @@
       initParticles();
     });
 
-    document.getElementById('browser').textContent = `Browser: ${navigator.appName}`;
+    document.getElementById('browserName').textContent = `Browser: ${navigator.appName}`;
     document.getElementById('userAgent').textContent = `User Agent: ${navigator.userAgent}`;
-    document.getElementById('device').textContent = `Device: ${navigator.platform}`;
+    document.getElementById('platform').textContent = `Platform: ${navigator.platform}`;
+    document.getElementById('vendor').textContent = `Vendor: ${navigator.vendor}`;
+    document.getElementById('appVersion').textContent = `App Version: ${navigator.appVersion}`;
+    document.getElementById('deviceType').textContent = `Device Type: ${navigator.platform}`;
     document.getElementById('cpuCores').textContent = `CPU Cores: ${navigator.hardwareConcurrency || "N/A"}`;
     document.getElementById('memory').textContent = `Device Memory: ${navigator.deviceMemory || "N/A"} GB`;
-    document.getElementById('java').textContent = `Java Enabled: ${navigator.javaEnabled() ? "Yes" : "No"}`;
-    document.getElementById('touch').textContent = `Touch Support: ${('ontouchstart' in window) ? "Yes" : "No"}`;
-    document.getElementById('cookies').textContent = `Cookies Enabled: ${navigator.cookieEnabled ? "Yes" : "No"}`;
-    document.getElementById('language').textContent = `Language: ${navigator.language}`;
-    document.getElementById('online').textContent = `Online: ${navigator.onLine ? "Yes" : "No"}`;
+    document.getElementById('javaEnabled').textContent = `Java Enabled: ${navigator.javaEnabled() ? "Yes" : "No"}`;
+    document.getElementById('touchSupport').textContent = `Touch Support: ${('ontouchstart' in window) ? "Yes" : "No"}`;
 
-    document.getElementById('screen').textContent = `Resolution: ${window.screen.width} x ${window.screen.height}`;
+    document.getElementById('screenResolution').textContent = `Resolution: ${window.screen.width} x ${window.screen.height}`;
     document.getElementById('colorDepth').textContent = `Color Depth: ${window.screen.colorDepth}`;
     document.getElementById('pixelRatio').textContent = `Pixel Ratio: ${window.devicePixelRatio}`;
+    document.getElementById('screenOrientation').textContent = `Orientation: ${screen.orientation ? screen.orientation.type : "N/A"}`;
 
-    document.getElementById('timezone').textContent = `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
+    document.getElementById('onlineStatus').textContent = `Online: ${navigator.onLine ? "Yes" : "No"}`;
+    document.getElementById('language').textContent = `Language: ${navigator.language}`;
+    document.getElementById('cookiesEnabled').textContent = `Cookies Enabled: ${navigator.cookieEnabled ? "Yes" : "No"}`;
+    document.getElementById('connectionType').textContent = `Connection Type: ${navigator.connection ? navigator.connection.effectiveType : "N/A"}`;
+
+    document.getElementById('doNotTrack').textContent = `Do Not Track: ${navigator.doNotTrack || "N/A"}`;
+    document.getElementById('timezoneOffset').textContent = `Timezone Offset: ${new Date().getTimezoneOffset()} minutes`;
+    document.getElementById('referrer').textContent = `Referrer: ${document.referrer || "None"}`;
+    document.getElementById('connectionDownlink').textContent = `Downlink: ${navigator.connection ? navigator.connection.downlink + " Mb/s" : "N/A"}`;
+    document.getElementById('connectionRtt').textContent = `RTT: ${navigator.connection ? navigator.connection.rtt + " ms" : "N/A"}`;
+    document.getElementById('languageList').textContent = `Languages: ${navigator.languages.join(', ')}`;
 
     fetch('https://ipinfo.io/json?token=68ff73597277ed')
       .then(response => response.json())
       .then(data => {
         document.getElementById('ip').textContent = `IP: ${data.ip}`;
+        document.getElementById('hostname').textContent = `Hostname: ${data.hostname || "N/A"}`;
         document.getElementById('city').textContent = `City: ${data.city}`;
         document.getElementById('region').textContent = `Region: ${data.region}`;
         document.getElementById('country').textContent = `Country: ${data.country}`;
+        document.getElementById('org').textContent = `Organization: ${data.org}`;
+        document.getElementById('postal').textContent = `Postal Code: ${data.postal}`;
+        document.getElementById('timezone').textContent = `Timezone: ${data.timezone}`;
+        document.getElementById('loc').textContent = `Location Coordinates: ${data.loc}`;
       })
-      .catch(error => console.error('Error fetching IP info:', error));
+      .catch(error => console.error('Error fetching IP information:', error));
   </script>
 </body>
 </html>
