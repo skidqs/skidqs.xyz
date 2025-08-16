@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Device Information</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #333;
+    }
+    .info {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      max-width: 500px;
+      width: 100%;
+      margin-top: 20px;
+    }
+    .info p {
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    a {
+      margin-top: 20px;
+      text-decoration: none;
+      color: #0077cc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Your Device Information</h1>
+  <div class="info">
+    <p id="userAgent"></p>
+    <p id="screenSize"></p>
+    <p id="language"></p>
+    <p id="platform"></p>
+    <p id="timezone"></p>
+    <p id="onlineStatus"></p>
+    <p id="touchSupport"></p>
+  </div>
+  <a href="index.html">← Back to Home</a>
+
+  <script>
+    document.getElementById('userAgent').textContent = 'Browser Info: ' + navigator.userAgent;
+    document.getElementById('screenSize').textContent = 'Screen Size: ' + screen.width + ' x ' + screen.height;
+    document.getElementById('language').textContent = 'Language: ' + navigator.language;
+    document.getElementById('platform').textContent = 'Platform: ' + navigator.platform;
+    document.getElementById('timezone').textContent = 'Timezone: ' + Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.getElementById('onlineStatus').textContent = 'Online Status: ' + (navigator.onLine ? 'Online' : 'Offline');
+    document.getElementById('touchSupport').textContent = 'Touch Support: ' + ('ontouchstart' in window ? 'Yes' : 'No');
+  </script>
+</body>
+</html>
