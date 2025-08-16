@@ -1,169 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Main Page</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Tomorrow&display=swap" rel="stylesheet">
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tomorrow&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body {
-  background: black;
-  color: white;
-  font-family: 'Orbitron', sans-serif;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-}
+    body {
+      background: black;
+      color: white;
+      font-family: 'Tomorrow', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
 
-#canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
 
-.main-content {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-}
+    .hero {
+      z-index: 2;
+      margin-top: 15vh;
+    }
 
-h1 {
-  font-family: 'Tomorrow', sans-serif;
-  font-size: 4rem;
-  margin-bottom: 20px;
-}
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: normal;
+      margin-bottom: 15px;
+    }
 
-p {
-  font-size: 1.2rem;
-  margin-bottom: 40px;
-  max-width: 600px;
-}
+    .hero p {
+      font-size: 1.2rem;
+      color: #aaa;
+    }
 
-.nav-buttons {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+    .nav {
+      z-index: 2;
+      margin-top: 50px;
+    }
 
-.nav-buttons a {
-  padding: 12px 28px;
-  text-decoration: none;
-  color: white;
-  border: 2px solid white;
-  border-radius: 8px;
-  font-family: 'Tomorrow', sans-serif;
-  transition: 0.3s ease;
-}
+    .nav a {
+      display: inline-block;
+      padding: 12px 28px;
+      margin: 0 10px;
+      font-size: 1rem;
+      color: white;
+      border: 1px solid white;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
 
-.nav-buttons a:hover {
-  background: white;
-  color: black;
-}
+    .nav a:hover {
+      background: white;
+      color: black;
+      transform: translateY(-3px);
+    }
 
-@media (max-width: 600px) {
-  h1 { font-size: 2.5rem; }
-  p { font-size: 1rem; }
-}
-</style>
+    footer {
+      z-index: 2;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
 </head>
 <body>
-<canvas id="canvas"></canvas>
+  <canvas id="canvas"></canvas>
 
-<div class="main-content">
-  <h1>Welcome to My Site</h1>
-  <p>This is the main page. Use the buttons below to explore different sections and information on this site.</p>
-  <div class="nav-buttons">
-    <a href="info.html">Device Information</a>
-    <a href="#">Another Page</a>
-    <a href="#">Contact</a>
+  <div class="hero">
+    <h1>Welcome</h1>
+    <p>Explore the site</p>
   </div>
-</div>
 
-<script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-let particles = [];
+  <div class="nav">
+    <a href="index.html">Bio Page</a>
+  </div>
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+  <footer>
+    &copy; 2025 YourSite. All rights reserved.
+  </footer>
 
-window.addEventListener('resize', () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
 
-class Particle {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.vx = (Math.random() - 0.5) * 1.2;
-    this.vy = (Math.random() - 0.5) * 1.2;
-    this.size = 3;
-  }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-  }
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = 'white';
-    ctx.fill();
-  }
-}
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-function connectParticles() {
-  for (let a = 0; a < particles.length; a++) {
-    for (let b = a + 1; b < particles.length; b++) {
-      let dx = particles[a].x - particles[b].x;
-      let dy = particles[a].y - particles[b].y;
-      let distance = Math.sqrt(dx * dx + dy * dy);
-      if (distance < 150) {
-        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 150})`;
-        ctx.lineWidth = 1;
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      init();
+    });
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 1.2;
+        this.vy = (Math.random() - 0.5) * 1.2;
+        this.size = 2;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
         ctx.beginPath();
-        ctx.moveTo(particles[a].x, particles[a].y);
-        ctx.lineTo(particles[b].x, particles[b].y);
-        ctx.stroke();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
       }
     }
-  }
-}
 
-function init() {
-  particles = [];
-  for (let i = 0; i < 180; i++) {
-    let x = Math.random() * canvas.width;
-    let y = Math.random() * canvas.height;
-    particles.push(new Particle(x, y));
-  }
-}
+    function connectParticles() {
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a + 1; b < particles.length; b++) {
+          let dx = particles[a].x - particles[b].x;
+          let dy = particles[a].y - particles[b].y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 120) {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 120})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(particles[b].x, particles[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
 
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particles.forEach(p => { p.update(); p.draw(); });
-  connectParticles();
-  requestAnimationFrame(animate);
-}
+    function init() {
+      particles = [];
+      for (let i = 0; i < 120; i++) {
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * canvas.height;
+        particles.push(new Particle(x, y));
+      }
+    }
 
-init();
-animate();
-</script>
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      connectParticles();
+      requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+  </script>
 </body>
 </html>
