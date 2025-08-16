@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Device Information Dashboard</title>
+<title>skidqs</title>
 <link href="https://fonts.googleapis.com/css2?family=Tomorrow&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -106,24 +106,6 @@ body {
 .links img.doxbin { width: 34px; height: 34px; pointer-events: none; }
 .links .fa-globe { font-size: 28px; pointer-events: none; }
 
-.device-information {
-  font-family: 'Tomorrow', sans-serif;
-  color: white;
-  background: rgba(50,50,50,0.4);
-  padding: 20px;
-  border-radius: 15px;
-  width: 100%;
-  max-width: 500px;
-}
-
-.device-information h2 {
-  margin-bottom: 15px;
-}
-
-.device-information p {
-  margin: 5px 0;
-}
-
 body, .name, .links, #splash {
   -webkit-touch-callout: none;
 }
@@ -155,19 +137,10 @@ body, .name, .links, #splash {
       <i class="fas fa-globe"></i>
     </a>
   </div>
-
-  <div class="device-information">
-    <h2>Device Information Dashboard</h2>
-    <p><strong>Operating System:</strong> [Not Collected]</p>
-    <p><strong>Browser:</strong> [Not Collected]</p>
-    <p><strong>Device Type:</strong> [Not Collected]</p>
-    <p><strong>Screen Resolution:</strong> [Not Collected]</p>
-    <p><strong>Public IP:</strong> [Not Collected]</p>
-  </div>
 </div>
 
 <script>
-
+// Your original JS stays mostly the same
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
