@@ -1,1 +1,233 @@
-Hello niggers skidqs bio page coming soon
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>skidqs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: black;
+      color: white;
+      font-family: 'Open Sans', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .content {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      z-index: 10;
+    }
+
+    .profile-pic {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .name {
+      font-size: 56px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .links {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .links a {
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .links a:hover {
+      opacity: 0.6;
+    }
+
+    .links img.telegram {
+      width: 28px;
+      height: 28px;
+    }
+    .links img.doxbin {
+      width: 34px;
+      height: 34px;
+    }
+    .links .fa-globe {
+      font-size: 28px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <audio id="bgMusic" loop preload="auto" hidden>
+    <source src="star-skids.mp3" type="audio/mp3">
+  </audio>
+
+  <iframe src="about:blank" allow="autoplay" style="display:none" id="autoplayFrame"></iframe>
+
+  <div class="content">
+
+    <img src="pfp.png" alt="skidqs" class="profile-pic">
+    <div>
+      <div class="name">skidqs</div>
+      <div class="links">
+
+        <a href="https://t.me/skidqss" target="_blank">
+          <img src="telegram.png" alt="Telegram" class="telegram">
+        </a>
+
+        <a href="https://doxbin.com/user/skidqs" target="_blank">
+          <img src="doxbin.png" alt="Doxbin" class="doxbin">
+        </a>
+
+        <a href="https://zero-config.wiki" target="_blank">
+          <i class="fas fa-globe"></i>
+        </a>
+        <a href="https://savage.rest" target="_blank">
+          <i class="fas fa-globe"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let mouse = { x: null, y: null };
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 1.2;
+        this.vy = (Math.random() - 0.5) * 1.2;
+        this.size = 3;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+      }
+    }
+
+    function connectParticles() {
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a + 1; b < particles.length; b++) {
+          let dx = particles[a].x - particles[b].x;
+          let dy = particles[a].y - particles[b].y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 150) {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 150})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(particles[b].x, particles[b].y);
+            ctx.stroke();
+          }
+        }
+        if (mouse.x && mouse.y) {
+          let dx = particles[a].x - mouse.x;
+          let dy = particles[a].y - mouse.y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 150) {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 150})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function init() {
+      particles = [];
+      for (let i = 0; i < 180; i++) {
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * canvas.height;
+        particles.push(new Particle(x, y));
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      connectParticles();
+      requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+
+    const audio = document.getElementById("bgMusic");
+    function forcePlay() {
+      audio.volume = 1.0;
+      audio.muted = false;
+      audio.play().catch(() => {});
+    }
+
+    window.addEventListener("load", () => {
+      forcePlay();
+      setTimeout(forcePlay, 500);
+      setTimeout(forcePlay, 1500);
+    });
+  </script>
+</body>
+</html>
