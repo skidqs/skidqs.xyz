@@ -8,7 +8,7 @@
     body {
       margin: 0;
       padding: 0;
-      overflow: hidden;
+      overflow-x: hidden;
       background: black;
       font-family: 'Arial', sans-serif;
       color: white;
@@ -28,17 +28,17 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
-      padding: 40px;
+      gap: 15px;
+      padding: 30px;
     }
 
     .info-box {
       background: rgba(0,0,0,0.6);
       border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 12px;
-      padding: 20px;
-      backdrop-filter: blur(6px);
-      width: 300px;
+      border-radius: 10px;
+      padding: 15px;
+      width: 200px;
+      text-align: center;
       transition: transform 0.3s, background 0.3s;
     }
 
@@ -47,15 +47,15 @@
       background: rgba(255,255,255,0.1);
     }
 
-    .info-box h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
+    .info-box h3 {
+      font-size: 14px;
+      margin-bottom: 8px;
       text-transform: uppercase;
       font-weight: normal;
     }
 
     .info-box p {
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.4;
       word-break: break-word;
     }
@@ -65,40 +65,34 @@
   <canvas id="canvas"></canvas>
 
   <div class="info-container">
-    <div class="info-box">
-      <h2>Browser & Device</h2>
-      <p id="browser"></p>
-      <p id="useragent"></p>
-      <p id="os"></p>
-      <p id="platform"></p>
-      <p id="java"></p>
-      <p id="cores"></p>
-      <p id="memory"></p>
-      <p id="touch"></p>
-      <p id="cookies"></p>
-      <p id="language"></p>
-      <p id="online"></p>
-    </div>
-    <div class="info-box">
-      <h2>Screen & Display</h2>
-      <p id="screen"></p>
-      <p id="colorDepth"></p>
-      <p id="pixelRatio"></p>
-      <p id="availWidth"></p>
-      <p id="availHeight"></p>
-    </div>
-    <div class="info-box">
-      <h2>IP & Location</h2>
-      <p id="ip"></p>
-      <p id="hostname"></p>
-      <p id="city"></p>
-      <p id="region"></p>
-      <p id="country"></p>
-      <p id="loc"></p>
-      <p id="org"></p>
-      <p id="postal"></p>
-      <p id="timezone"></p>
-    </div>
+
+    <div class="info-box"><h3>Browser Name</h3><p id="browser"></p></div>
+    <div class="info-box"><h3>User Agent</h3><p id="useragent"></p></div>
+
+    <div class="info-box"><h3>Platform</h3><p id="platform"></p></div>
+    <div class="info-box"><h3>Java Enabled</h3><p id="java"></p></div>
+    <div class="info-box"><h3>CPU Cores</h3><p id="cores"></p></div>
+    <div class="info-box"><h3>Device Memory</h3><p id="memory"></p></div>
+    <div class="info-box"><h3>Touch Support</h3><p id="touch"></p></div>
+    <div class="info-box"><h3>Cookies Enabled</h3><p id="cookies"></p></div>
+    <div class="info-box"><h3>Language</h3><p id="language"></p></div>
+    <div class="info-box"><h3>Online</h3><p id="online"></p></div>
+
+    <div class="info-box"><h3>Resolution</h3><p id="screen"></p></div>
+    <div class="info-box"><h3>Color Depth</h3><p id="colorDepth"></p></div>
+    <div class="info-box"><h3>Pixel Ratio</h3><p id="pixelRatio"></p></div>
+    <div class="info-box"><h3>Available Width</h3><p id="availWidth"></p></div>
+    <div class="info-box"><h3>Available Height</h3><p id="availHeight"></p></div>
+
+    <div class="info-box"><h3>IP Address</h3><p id="ip"></p></div>
+    <div class="info-box"><h3>Hostname</h3><p id="hostname"></p></div>
+    <div class="info-box"><h3>City</h3><p id="city"></p></div>
+    <div class="info-box"><h3>Region</h3><p id="region"></p></div>
+    <div class="info-box"><h3>Country</h3><p id="country"></p></div>
+    <div class="info-box"><h3>Coordinates</h3><p id="loc"></p></div>
+    <div class="info-box"><h3>Organization</h3><p id="org"></p></div>
+    <div class="info-box"><h3>Postal</h3><p id="postal"></p></div>
+    <div class="info-box"><h3>Timezone</h3><p id="timezone"></p></div>
   </div>
 
   <script>
@@ -171,36 +165,35 @@
       initParticles();
     });
 
-    document.getElementById('browser').textContent = `Browser: ${navigator.appName} ${navigator.appVersion}`;
-    document.getElementById('useragent').textContent = `User Agent: ${navigator.userAgent}`;
-    document.getElementById('os').textContent = `Operating System: ${navigator.platform}`;
-    document.getElementById('platform').textContent = `Platform: ${navigator.platform}`;
-    document.getElementById('java').textContent = `Java Enabled: ${navigator.javaEnabled() ? "Yes" : "No"}`;
-    document.getElementById('cores').textContent = `CPU Cores: ${navigator.hardwareConcurrency || "N/A"}`;
-    document.getElementById('memory').textContent = `Device Memory: ${navigator.deviceMemory || "N/A"} GB`;
-    document.getElementById('touch').textContent = `Touch Support: ${('ontouchstart' in window) ? "Yes" : "No"}`;
-    document.getElementById('cookies').textContent = `Cookies Enabled: ${navigator.cookieEnabled ? "Yes" : "No"}`;
-    document.getElementById('language').textContent = `Language: ${navigator.language}`;
-    document.getElementById('online').textContent = `Online Status: ${navigator.onLine ? "Online" : "Offline"}`;
+    document.getElementById('browser').textContent = `${navigator.appName} ${navigator.appVersion}`;
+    document.getElementById('useragent').textContent = navigator.userAgent;
+    document.getElementById('platform').textContent = navigator.platform;
+    document.getElementById('java').textContent = navigator.javaEnabled() ? "Yes" : "No";
+    document.getElementById('cores').textContent = navigator.hardwareConcurrency || "N/A";
+    document.getElementById('memory').textContent = navigator.deviceMemory || "N/A";
+    document.getElementById('touch').textContent = ('ontouchstart' in window) ? "Yes" : "No";
+    document.getElementById('cookies').textContent = navigator.cookieEnabled ? "Yes" : "No";
+    document.getElementById('language').textContent = navigator.language;
+    document.getElementById('online').textContent = navigator.onLine ? "Online" : "Offline";
 
-    document.getElementById('screen').textContent = `Resolution: ${window.screen.width} x ${window.screen.height}`;
-    document.getElementById('colorDepth').textContent = `Color Depth: ${window.screen.colorDepth}`;
-    document.getElementById('pixelRatio').textContent = `Pixel Ratio: ${window.devicePixelRatio}`;
-    document.getElementById('availWidth').textContent = `Available Width: ${window.screen.availWidth}`;
-    document.getElementById('availHeight').textContent = `Available Height: ${window.screen.availHeight}`;
+    document.getElementById('screen').textContent = `${window.screen.width} x ${window.screen.height}`;
+    document.getElementById('colorDepth').textContent = window.screen.colorDepth;
+    document.getElementById('pixelRatio').textContent = window.devicePixelRatio;
+    document.getElementById('availWidth').textContent = window.screen.availWidth;
+    document.getElementById('availHeight').textContent = window.screen.availHeight;
 
     fetch('https://ipinfo.io/json?token=68ff73597277ed')
       .then(response => response.json())
       .then(data => {
-        document.getElementById('ip').textContent = `IP Address: ${data.ip}`;
-        document.getElementById('hostname').textContent = `Hostname: ${data.hostname || "N/A"}`;
-        document.getElementById('city').textContent = `City: ${data.city}`;
-        document.getElementById('region').textContent = `Region: ${data.region}`;
-        document.getElementById('country').textContent = `Country: ${data.country}`;
-        document.getElementById('loc').textContent = `Coordinates: ${data.loc}`;
-        document.getElementById('org').textContent = `Organization: ${data.org}`;
-        document.getElementById('postal').textContent = `Postal Code: ${data.postal}`;
-        document.getElementById('timezone').textContent = `Timezone: ${data.timezone}`;
+        document.getElementById('ip').textContent = data.ip;
+        document.getElementById('hostname').textContent = data.hostname || "N/A";
+        document.getElementById('city').textContent = data.city;
+        document.getElementById('region').textContent = data.region;
+        document.getElementById('country').textContent = data.country;
+        document.getElementById('loc').textContent = data.loc;
+        document.getElementById('org').textContent = data.org;
+        document.getElementById('postal').textContent = data.postal;
+        document.getElementById('timezone').textContent = data.timezone;
       })
       .catch(error => console.error('Error fetching IP info:', error));
   </script>
