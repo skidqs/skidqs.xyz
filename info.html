@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tis you lil nigga ?</title>
+<title>Device Information Dashboard</title>
 <style>
 body {
   margin: 0;
@@ -25,8 +25,9 @@ canvas {
 .info-container {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
   padding: 40px;
 }
@@ -37,23 +38,19 @@ canvas {
   border-radius: 12px;
   padding: 20px;
   backdrop-filter: blur(6px);
-  transition: transform 0.3s, background 0.3s;
-}
-
-.info-box:hover {
-  transform: scale(1.05);
-  background: rgba(255,255,255,0.1);
+  width: 300px;
 }
 
 .info-box h2 {
   font-size: 18px;
   margin-bottom: 10px;
   text-transform: uppercase;
-  color: #00ffcc;
+  font-weight: normal;
 }
 
 .info-box p {
-  font-size: 16px;
+  font-size: 14px;
+  line-height: 1.4;
   word-break: break-word;
 }
 </style>
@@ -63,39 +60,27 @@ canvas {
 
 <div class="info-container">
   <div class="info-box">
-    <h2>Browser Information</h2>
+    <h2>Browser & Device</h2>
     <p id="browser"></p>
-  </div>
-  <div class="info-box">
-    <h2>Operating System</h2>
-    <p id="os"></p>
-  </div>
-  <div class="info-box">
-    <h2>Screen Resolution</h2>
-    <p id="screen"></p>
-  </div>
-  <div class="info-box">
-    <h2>Language</h2>
-    <p id="language"></p>
-  </div>
-  <div class="info-box">
-    <h2>Timezone</h2>
-    <p id="timezone"></p>
-  </div>
-  <div class="info-box">
-    <h2>Platform</h2>
-    <p id="platform"></p>
-  </div>
-  <div class="info-box">
-    <h2>Cookies Enabled</h2>
-    <p id="cookies"></p>
-  </div>
-  <div class="info-box">
-    <h2>User Agent</h2>
     <p id="useragent"></p>
+    <p id="os"></p>
+    <p id="platform"></p>
+    <p id="java"></p>
+    <p id="cores"></p>
+    <p id="memory"></p>
+    <p id="touch"></p>
   </div>
   <div class="info-box">
-    <h2>Online Status</h2>
+    <h2>Screen & Display</h2>
+    <p id="screen"></p>
+    <p id="colorDepth"></p>
+    <p id="pixelRatio"></p>
+  </div>
+  <div class="info-box">
+    <h2>Settings & Status</h2>
+    <p id="language"></p>
+    <p id="timezone"></p>
+    <p id="cookies"></p>
     <p id="online"></p>
   </div>
 </div>
@@ -170,15 +155,23 @@ window.addEventListener('resize', ()=>{
   initParticles();
 });
 
-document.getElementById('browser').textContent = navigator.appName + " " + navigator.appVersion;
-document.getElementById('os').textContent = navigator.platform;
-document.getElementById('screen').textContent = window.screen.width + " x " + window.screen.height;
-document.getElementById('language').textContent = navigator.language;
-document.getElementById('timezone').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
-document.getElementById('platform').textContent = navigator.platform;
-document.getElementById('cookies').textContent = navigator.cookieEnabled ? "Yes" : "No";
-document.getElementById('useragent').textContent = navigator.userAgent;
-document.getElementById('online').textContent = navigator.onLine ? "Online" : "Offline";
+document.getElementById('browser').textContent = `Browser: ${navigator.appName} ${navigator.appVersion}`;
+document.getElementById('useragent').textContent = `User Agent: ${navigator.userAgent}`;
+document.getElementById('os').textContent = `Operating System: ${navigator.platform}`;
+document.getElementById('platform').textContent = `Platform: ${navigator.platform}`;
+document.getElementById('java').textContent = `Java Enabled: ${navigator.javaEnabled() ? "Yes" : "No"}`;
+document.getElementById('cores').textContent = `CPU Cores: ${navigator.hardwareConcurrency || "N/A"}`;
+document.getElementById('memory').textContent = `Device Memory: ${navigator.deviceMemory || "N/A"} GB`;
+document.getElementById('touch').textContent = `Touch Support: ${('ontouchstart' in window) ? "Yes" : "No"}`;
+
+document.getElementById('screen').textContent = `Resolution: ${window.screen.width} x ${window.screen.height}`;
+document.getElementById('colorDepth').textContent = `Color Depth: ${window.screen.colorDepth}`;
+document.getElementById('pixelRatio').textContent = `Pixel Ratio: ${window.devicePixelRatio}`;
+
+document.getElementById('language').textContent = `Language: ${navigator.language}`;
+document.getElementById('timezone').textContent = `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
+document.getElementById('cookies').textContent = `Cookies Enabled: ${navigator.cookieEnabled ? "Yes" : "No"}`;
+document.getElementById('online').textContent = `Online Status: ${navigator.onLine ? "Online" : "Offline"}`;
 </script>
 </body>
 </html>
