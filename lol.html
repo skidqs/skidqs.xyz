@@ -3,125 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Device Info Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<title>Device Information Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Tomorrow&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-  body { background: black; color: white; overflow: hidden; min-height: 100vh; width: 100vw; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: filter 0.5s ease; }
-  #canvas.blur { filter: blur(8px); pointer-events: none; }
+body {
+  background: black;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
 
-  .container {
-    position: relative;
-    z-index: 5;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 60px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+#canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  transition: filter 0.5s ease;
+}
 
-  .card {
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(10px);
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(255,255,255,0.05);
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  .card:hover { transform: translateY(-8px); box-shadow: 0 8px 25px rgba(255,255,255,0.2); }
+#canvas.blur {
+  filter: blur(8px);
+  pointer-events: none;
+}
 
-  .card h2 { margin-bottom: 15px; font-size: 1.3rem; color: #ffffff; }
-  .card p { font-size: 0.95rem; color: #d1d5db; margin: 6px 0; word-wrap: break-word; }
+#splash {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 56px;
+  cursor: pointer;
+  text-transform: lowercase;
+  z-index: 10;
+  font-family: 'Tomorrow', sans-serif;
+  user-select: none;
+}
 
-  a.home {
-    position: relative;
-    z-index: 5;
-    display: inline-block;
-    text-decoration: none;
-    background: #2563eb;
-    color: #ffffff;
-    padding: 12px 30px;
-    border-radius: 50px;
-    font-weight: 600;
-    transition: 0.3s;
-    margin: 40px auto;
-  }
-  a.home:hover { background: #1d4ed8; }
+.content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.5);
+  transform-origin: center;
+  z-index: 10;
+  display: none;
+  pointer-events: none;
 
-  header { text-align: center; margin-bottom: 40px; z-index: 5; position: relative; }
-  header h1 { font-size: 2.5rem; color: white; }
-  header p { color: #9ca3af; }
+  background: rgba(30, 30, 30, 0.85);
+  padding: 40px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  text-align: center;
+}
+
+.profile-pic {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+.name {
+  font-family: 'Tomorrow', sans-serif;
+  font-size: 57px;
+  text-transform: lowercase;
+  color: white;
+  margin: 20px 0;
+  user-select: none;
+}
+
+.links {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+}
+
+.links a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.links img.telegram { width: 28px; height: 28px; pointer-events: none; }
+.links img.doxbin { width: 34px; height: 34px; pointer-events: none; }
+.links .fa-globe { font-size: 28px; pointer-events: none; }
+
+.device-information {
+  font-family: 'Tomorrow', sans-serif;
+  color: white;
+  background: rgba(50,50,50,0.4);
+  padding: 20px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.device-information h2 {
+  margin-bottom: 15px;
+}
+
+.device-information p {
+  margin: 5px 0;
+}
+
+body, .name, .links, #splash {
+  -webkit-touch-callout: none;
+}
 </style>
 </head>
 <body>
-
 <canvas id="canvas"></canvas>
 
-<header>
-  <h1>Device Info Dashboard</h1>
-  <p>All safe info your browser can provide about your device and public IP.</p>
-</header>
+<audio id="bgMusic" loop preload="auto" hidden>
+  <source src="music.mp3" type="audio/mp3">
+</audio>
 
-<div class="container">
+<div id="splash">click to enter</div>
 
-  <div class="card">
-    <h2>Browser Info</h2>
-    <p id="userAgent"></p>
-    <p id="browserName"></p>
-    <p id="browserVersion"></p>
-    <p id="cookiesEnabled"></p>
+<div class="content">
+  <img src="pfp.png" alt="skidqs" class="profile-pic">
+  <div class="name">skidqs</div>
+  <div class="links">
+    <a href="https://t.me/skidqss" target="_blank">
+      <img src="telegram.png" alt="Telegram" class="telegram">
+    </a>
+    <a href="https://doxbin.com/user/skidqs" target="_blank">
+      <img src="doxbin.png" alt="Doxbin" class="doxbin">
+    </a>
+    <a href="https://zero-config.wiki" target="_blank">
+      <i class="fas fa-globe"></i>
+    </a>
+    <a href="https://savage.rest" target="_blank">
+      <i class="fas fa-globe"></i>
+    </a>
   </div>
 
-  <div class="card">
-    <h2>Screen & Display</h2>
-    <p id="screenSize"></p>
-    <p id="colorDepth"></p>
-    <p id="pixelRatio"></p>
-    <p id="windowSize"></p>
+  <div class="device-information">
+    <h2>Device Information Dashboard</h2>
+    <p><strong>Operating System:</strong> [Not Collected]</p>
+    <p><strong>Browser:</strong> [Not Collected]</p>
+    <p><strong>Device Type:</strong> [Not Collected]</p>
+    <p><strong>Screen Resolution:</strong> [Not Collected]</p>
+    <p><strong>Public IP:</strong> [Not Collected]</p>
   </div>
-
-  <div class="card">
-    <h2>Device Info</h2>
-    <p id="platform"></p>
-    <p id="language"></p>
-    <p id="timezone"></p>
-    <p id="onlineStatus"></p>
-    <p id="touchSupport"></p>
-  </div>
-
-  <div class="card">
-    <h2>Performance</h2>
-    <p id="cores"></p>
-    <p id="memory"></p>
-    <p id="battery"></p>
-  </div>
-
-  <div class="card">
-    <h2>IP & Location</h2>
-    <p id="publicIP">Loading...</p>
-    <p id="ipv6">IPv6: Loading...</p>
-    <p id="isp">ISP: Loading...</p>
-    <p id="org">Organization: Loading...</p>
-    <p id="location">Location: Loading...</p>
-    <p id="postal">Postal Code: Loading...</p>
-    <p id="latlon">Coordinates: Loading...</p>
-    <p id="timezoneIP">Timezone: Loading...</p>
-  </div>
-
 </div>
 
-<a class="home" href="index.html">← Back to Home</a>
-
 <script>
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
 let mouse = { x: null, y: null };
-let interactive = true;
+let interactive = false;
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -131,36 +182,43 @@ window.addEventListener('resize', () => {
   canvas.height = window.innerHeight;
 });
 
-window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+window.addEventListener('mousemove', (e) => {
+  if(interactive) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  }
+});
 
 class Particle {
   constructor(x, y) {
-    this.x = x; this.y = y;
-    this.vx = (Math.random()-0.5)*1.2;
-    this.vy = (Math.random()-0.5)*1.2;
+    this.x = x;
+    this.y = y;
+    this.vx = (Math.random() - 0.5) * 1.2;
+    this.vy = (Math.random() - 0.5) * 1.2;
     this.size = 3;
   }
   update() {
-    this.x += this.vx; this.y += this.vy;
-    if(this.x<0||this.x>canvas.width) this.vx*=-1;
-    if(this.y<0||this.y>canvas.height) this.vy*=-1;
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
   }
   draw() {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.fillStyle = 'white';
     ctx.fill();
   }
 }
 
 function connectParticles() {
-  for(let a=0; a<particles.length; a++){
-    for(let b=a+1; b<particles.length; b++){
+  for (let a = 0; a < particles.length; a++) {
+    for (let b = a + 1; b < particles.length; b++) {
       let dx = particles[a].x - particles[b].x;
       let dy = particles[a].y - particles[b].y;
-      let dist = Math.sqrt(dx*dx + dy*dy);
-      if(dist<150){
-        ctx.strokeStyle = `rgba(255,255,255,${1-dist/150})`;
+      let distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < 150) {
+        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 150})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(particles[a].x, particles[a].y);
@@ -168,12 +226,12 @@ function connectParticles() {
         ctx.stroke();
       }
     }
-    if(mouse.x && mouse.y){
+    if (interactive && mouse.x && mouse.y) {
       let dx = particles[a].x - mouse.x;
       let dy = particles[a].y - mouse.y;
-      let dist = Math.sqrt(dx*dx + dy*dy);
-      if(dist<150){
-        ctx.strokeStyle = `rgba(255,255,255,${1-dist/150})`;
+      let distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < 150) {
+        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 150})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(particles[a].x, particles[a].y);
@@ -184,65 +242,48 @@ function connectParticles() {
   }
 }
 
-function initParticles() {
+function init() {
   particles = [];
-  for(let i=0;i<180;i++){
-    particles.push(new Particle(Math.random()*canvas.width, Math.random()*canvas.height));
+  for (let i = 0; i < 180; i++) {
+    let x = Math.random() * canvas.width;
+    let y = Math.random() * canvas.height;
+    particles.push(new Particle(x, y));
   }
 }
 
 function animate() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{p.update();p.draw();});
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
   connectParticles();
   requestAnimationFrame(animate);
 }
 
-initParticles();
+init();
 animate();
 
-const ua = navigator.userAgent;
-document.getElementById('userAgent').textContent = 'User Agent: ' + ua;
-let name='Unknown', version='Unknown';
-if(ua.includes("Chrome")){name="Chrome";version=ua.match(/Chrome\/([\d.]+)/)[1];}
-else if(ua.includes("Firefox")){name="Firefox";version=ua.match(/Firefox\/([\d.]+)/)[1];}
-else if(ua.includes("Safari")){name="Safari";version=ua.match(/Version\/([\d.]+)/)[1];}
-document.getElementById('browserName').textContent='Browser: '+name;
-document.getElementById('browserVersion').textContent='Version: '+version;
-document.getElementById('cookiesEnabled').textContent='Cookies Enabled: '+navigator.cookieEnabled;
+const splash = document.getElementById('splash');
+const content = document.querySelector('.content');
+const canvasEl = document.getElementById('canvas');
+const audio = document.getElementById('bgMusic');
 
-document.getElementById('screenSize').textContent='Screen Size: '+screen.width+' x '+screen.height;
-document.getElementById('colorDepth').textContent='Color Depth: '+screen.colorDepth;
-document.getElementById('pixelRatio').textContent='Pixel Ratio: '+window.devicePixelRatio;
-document.getElementById('windowSize').textContent='Window Size: '+window.innerWidth+' x '+window.innerHeight;
+audio.volume = 0.1;
 
-document.getElementById('platform').textContent='Platform: '+navigator.platform;
-document.getElementById('language').textContent='Language: '+navigator.language;
-document.getElementById('timezone').textContent='Timezone: '+Intl.DateTimeFormat().resolvedOptions().timeZone;
-document.getElementById('onlineStatus').textContent='Online Status: '+(navigator.onLine?'Online':'Offline');
-document.getElementById('touchSupport').textContent='Touch Support: '+('ontouchstart' in window);
+function enterSite() {
+  interactive = true;
+  splash.style.display = 'none';
+  content.style.display = 'flex';
+  canvasEl.classList.remove('blur');
+  audio.play();
+}
 
-document.getElementById('cores').textContent='Logical Cores: '+navigator.hardwareConcurrency;
-document.getElementById('memory').textContent='Device Memory (GB): '+(navigator.deviceMemory||'N/A');
-if(navigator.getBattery){
-  navigator.getBattery().then(b => {
-    document.getElementById('battery').textContent='Battery Level: '+Math.round(b.level*100)+'%';
-  });
-} else document.getElementById('battery').textContent='Battery Level: N/A';
+document.addEventListener('click', enterSite);
+canvasEl.classList.add('blur');
 
-fetch('https://ipapi.co/json/')
-.then(res=>res.json())
-.then(data=>{
-  document.getElementById('publicIP').textContent='IPv4: '+data.ip;
-  document.getElementById('ipv6').textContent='IPv6: '+(data.ipv6||'N/A');
-  document.getElementById('isp').textContent='ISP: '+data.org;
-  document.getElementById('org').textContent='Org: '+data.org;
-  document.getElementById('location').textContent='City/Region: '+data.city+', '+data.region;
-  document.getElementById('postal').textContent='Postal Code: '+data.postal;
-  document.getElementById('latlon').textContent='Coordinates: '+data.latitude+', '+data.longitude;
-  document.getElementById('timezoneIP').textContent='Timezone: '+data.timezone;
-})
-.catch(()=>{document.getElementById('publicIP').textContent='Could not load IP info';});
+document.addEventListener('contextmenu', function(e) {
+  if(e.target.closest('.name, #splash')) {
+    e.preventDefault();
+  }
+});
 </script>
 </body>
 </html>
