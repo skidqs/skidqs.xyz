@@ -1,177 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Device Information Dashboard</title>
-<style>
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background: black;
-  font-family: 'Arial', sans-serif;
-  color: white;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Device Information Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      font-family: 'Arial', sans-serif;
+      color: white;
+    }
 
-canvas {
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
+    canvas {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
 
-.info-container {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 40px;
-}
+    .info-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 40px;
+    }
 
-.info-box {
-  background: rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 12px;
-  padding: 20px;
-  backdrop-filter: blur(6px);
-  width: 300px;
-}
+    .info-box {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(6px);
+      width: 300px;
+      transition: transform 0.3s, background 0.3s;
+    }
 
-.info-box h2 {
-  font-size: 18px;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-  font-weight: normal;
-}
+    .info-box:hover {
+      transform: scale(1.05);
+      background: rgba(255,255,255,0.1);
+    }
 
-.info-box p {
-  font-size: 14px;
-  line-height: 1.4;
-  word-break: break-word;
-}
-</style>
+    .info-box h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      font-weight: normal;
+    }
+
+    .info-box p {
+      font-size: 14px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+  </style>
 </head>
 <body>
-<canvas id="canvas"></canvas>
+  <canvas id="canvas"></canvas>
 
-<div class="info-container">
-  <div class="info-box">
-    <h2>Browser & Device</h2>
-    <p id="browser"></p>
-    <p id="useragent"></p>
-    <p id="os"></p>
-    <p id="platform"></p>
-    <p id="java"></p>
-    <p id="cores"></p>
-    <p id="memory"></p>
-    <p id="touch"></p>
+  <div class="info-container">
+    <div class="info-box">
+      <h2>Browser & Device</h2>
+      <p id="browser"></p>
+      <p id="useragent"></p>
+      <p id="os"></p>
+      <p id="platform"></p>
+      <p id="java"></p>
+      <p id="cores"></p>
+      <p id="memory"></p>
+      <p id="touch"></p>
+      <p id="cookies"></p>
+      <p id="language"></p>
+      <p id="online"></p>
+    </div>
+    <div class="info-box">
+      <h2>Screen & Display</h2>
+      <p id="screen"></p>
+      <p id="colorDepth"></p>
+      <p id="pixelRatio"></p>
+      <p id="availWidth"></p>
+      <p id="availHeight"></p>
+    </div>
+    <div class="info-box">
+      <h2>IP & Location</h2>
+      <p id="ip"></p>
+      <p id="hostname"></p>
+      <p id="city"></p>
+      <p id="region"></p>
+      <p id="country"></p>
+      <p id="loc"></p>
+      <p id="org"></p>
+      <p id="postal"></p>
+      <p id="timezone"></p>
+    </div>
   </div>
-  <div class="info-box">
-    <h2>Screen & Display</h2>
-    <p id="screen"></p>
-    <p id="colorDepth"></p>
-    <p id="pixelRatio"></p>
-  </div>
-  <div class="info-box">
-    <h2>Settings & Status</h2>
-    <p id="language"></p>
-    <p id="timezone"></p>
-    <p id="cookies"></p>
-    <p id="online"></p>
-  </div>
-</div>
 
-<script>
+  <script>
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-let particles = [];
-class Particle {
-  constructor(x, y){
-    this.x = x;
-    this.y = y;
-    this.vx = (Math.random() - 0.5) * 1.5;
-    this.vy = (Math.random() - 0.5) * 1.5;
-    this.size = 2;
-  }
-  update(){
-    this.x += this.vx;
-    this.y += this.vy;
-    if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
-    if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
-  }
-  draw(){
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
-    ctx.fillStyle = 'white';
-    ctx.fill();
-  }
-}
-
-function initParticles(){
-  particles = [];
-  for(let i=0;i<150;i++){
-    particles.push(new Particle(Math.random()*canvas.width, Math.random()*canvas.height));
-  }
-}
-
-function connectParticles(){
-  for(let a=0;a<particles.length;a++){
-    for(let b=a+1;b<particles.length;b++){
-      let dx = particles[a].x - particles[b].x;
-      let dy = particles[a].y - particles[b].y;
-      let dist = Math.sqrt(dx*dx + dy*dy);
-      if(dist < 150){
-        ctx.strokeStyle = `rgba(255,255,255,${1 - dist/150})`;
-        ctx.lineWidth = 1;
+    let particles = [];
+    class Particle {
+      constructor(x, y){
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 1.5;
+        this.vy = (Math.random() - 0.5) * 1.5;
+        this.size = 2;
+      }
+      update(){
+        this.x += this.vx;
+        this.y += this.vy;
+        if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw(){
         ctx.beginPath();
-        ctx.moveTo(particles[a].x, particles[a].y);
-        ctx.lineTo(particles[b].x, particles[b].y);
-        ctx.stroke();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
       }
     }
-  }
-}
 
-function animate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p => {p.update(); p.draw();});
-  connectParticles();
-  requestAnimationFrame(animate);
-}
+    function initParticles(){
+      particles = [];
+      for(let i=0;i<150;i++){
+        particles.push(new Particle(Math.random()*canvas.width, Math.random()*canvas.height));
+      }
+    }
 
-initParticles();
-animate();
-window.addEventListener('resize', ()=>{
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  initParticles();
-});
+    function connectParticles(){
+      for(let a=0;a<particles.length;a++){
+        for(let b=a+1;b<particles.length;b++){
+          let dx = particles[a].x - particles[b].x;
+          let dy = particles[a].y - particles[b].y;
+          let dist = Math.sqrt(dx*dx + dy*dy);
+          if(dist < 150){
+            ctx.strokeStyle = `rgba(255,255,255,${1 - dist/150})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(particles[b].x, particles[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
 
-document.getElementById('browser').textContent = `Browser: ${navigator.appName} ${navigator.appVersion}`;
-document.getElementById('useragent').textContent = `User Agent: ${navigator.userAgent}`;
-document.getElementById('os').textContent = `Operating System: ${navigator.platform}`;
-document.getElementById('platform').textContent = `Platform: ${navigator.platform}`;
-document.getElementById('java').textContent = `Java Enabled: ${navigator.javaEnabled() ? "Yes" : "No"}`;
-document.getElementById('cores').textContent = `CPU Cores: ${navigator.hardwareConcurrency || "N/A"}`;
-document.getElementById('memory').textContent = `Device Memory: ${navigator.deviceMemory || "N/A"} GB`;
-document.getElementById('touch').textContent = `Touch Support: ${('ontouchstart' in window) ? "Yes" : "No"}`;
+    function animate(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p => {p.update(); p.draw();});
+      connectParticles();
+      requestAnimationFrame(animate);
+    }
 
-document.getElementById('screen').textContent = `Resolution: ${window.screen.width} x ${window.screen.height}`;
-document.getElementById('colorDepth').textContent = `Color Depth: ${window.screen.colorDepth}`;
-document.getElementById('pixelRatio').textContent = `Pixel Ratio: ${window.devicePixelRatio}`;
+    initParticles();
+    animate();
+    window.addEventListener('resize', ()=>{
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    });
 
-document.getElementById('language').textContent = `Language: ${navigator.language}`;
-document.getElementById('timezone').textContent = `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
-document.getElementById('cookies').textContent = `Cookies Enabled: ${navigator.cookieEnabled ? "Yes" : "No"}`;
-document.getElementById('online').textContent = `Online Status: ${navigator.onLine ? "Online" : "Offline"}`;
-</script>
+    document.getElementById('browser').textContent = `Browser: ${navigator.appName} ${navigator.appVersion}`;
+    document.getElementById('useragent').textContent = `User Agent: ${navigator.userAgent}`;
+    document.getElementById('os').textContent = `Operating System: ${navigator.platform}`;
+    document.getElementById('platform').textContent = `Platform: ${navigator.platform}`;
+    document.getElementById('java').textContent = `Java Enabled: ${navigator.javaEnabled() ? "Yes" : "No"}`;
+    document.getElementById('cores').textContent = `CPU Cores: ${navigator.hardwareConcurrency || "N/A"}`;
+    document.getElementById('memory').textContent = `Device Memory: ${navigator.deviceMemory || "N/A"} GB`;
+    document.getElementById('touch').textContent = `Touch Support: ${('ontouchstart' in window) ? "Yes" : "No"}`;
+    document.getElementById('cookies').textContent = `Cookies Enabled: ${navigator.cookieEnabled ? "Yes" : "No"}`;
+    document.getElementById('language').textContent = `Language: ${navigator.language}`;
+    document.getElementById('online').textContent = `Online Status: ${navigator.onLine ? "Online" : "Offline"}`;
+
+    document.getElementById('screen').textContent = `Resolution: ${window.screen.width} x ${window.screen.height}`;
+    document.getElementById('colorDepth').textContent = `Color Depth: ${window.screen.colorDepth}`;
+    document.getElementById('pixelRatio').textContent = `Pixel Ratio: ${window.devicePixelRatio}`;
+    document.getElementById('availWidth').textContent = `Available Width: ${window.screen.availWidth}`;
+    document.getElementById('availHeight').textContent = `Available Height: ${window.screen.availHeight}`;
+
+    fetch('https://ipinfo.io/json?token=68ff73597277ed')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('ip').textContent = `IP Address: ${data.ip}`;
+        document.getElementById('hostname').textContent = `Hostname: ${data.hostname || "N/A"}`;
+        document.getElementById('city').textContent = `City: ${data.city}`;
+        document.getElementById('region').textContent = `Region: ${data.region}`;
+        document.getElementById('country').textContent = `Country: ${data.country}`;
+        document.getElementById('loc').textContent = `Coordinates: ${data.loc}`;
+        document.getElementById('org').textContent = `Organization: ${data.org}`;
+        document.getElementById('postal').textContent = `Postal Code: ${data.postal}`;
+        document.getElementById('timezone').textContent = `Timezone: ${data.timezone}`;
+      })
+      .catch(error => console.error('Error fetching IP info:', error));
+  </script>
 </body>
 </html>
