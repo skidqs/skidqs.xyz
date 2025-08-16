@@ -11,24 +11,29 @@
       background: black;
       font-family: 'Arial', sans-serif;
       color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      overflow: hidden;
     }
 
     canvas {
-      display: block;
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
-      z-index: 1;
+      z-index: 0;
     }
 
     .info-container {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
-      padding: 40px;
+      padding: 20px;
+      z-index: 1;
+      width: 90%;
+      max-width: 1200px;
     }
 
     .info-box {
@@ -36,7 +41,6 @@
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 12px;
       padding: 20px;
-      width: 280px;
       text-align: center;
       transition: transform 0.3s, background 0.3s;
     }
@@ -69,13 +73,13 @@
     <div class="info-box">
       <h2>Browser Info</h2>
       <p id="browser"></p>
-      <p id="useragent"></p>
+      <p id="userAgent"></p>
     </div>
 
     <div class="info-box">
       <h2>Device Info</h2>
-      <p id="platform"></p>
-      <p id="cores"></p>
+      <p id="device"></p>
+      <p id="cpuCores"></p>
       <p id="memory"></p>
     </div>
 
@@ -180,11 +184,11 @@
     });
 
     document.getElementById('browser').textContent = `Browser: ${navigator.appName}`;
-    document.getElementById('useragent').textContent = `User Agent: ${navigator.userAgent}`;
-    document.getElementById('platform').textContent = `Platform: ${navigator.platform}`;
-    document.getElementById('java').textContent = `Java Enabled: ${navigator.javaEnabled() ? "Yes" : "No"}`;
-    document.getElementById('cores').textContent = `CPU Cores: ${navigator.hardwareConcurrency || "N/A"}`;
+    document.getElementById('userAgent').textContent = `User Agent: ${navigator.userAgent}`;
+    document.getElementById('device').textContent = `Device: ${navigator.platform}`;
+    document.getElementById('cpuCores').textContent = `CPU Cores: ${navigator.hardwareConcurrency || "N/A"}`;
     document.getElementById('memory').textContent = `Device Memory: ${navigator.deviceMemory || "N/A"} GB`;
+    document.getElementById('java').textContent = `Java Enabled: ${navigator.javaEnabled() ? "Yes" : "No"}`;
     document.getElementById('touch').textContent = `Touch Support: ${('ontouchstart' in window) ? "Yes" : "No"}`;
     document.getElementById('cookies').textContent = `Cookies Enabled: ${navigator.cookieEnabled ? "Yes" : "No"}`;
     document.getElementById('language').textContent = `Language: ${navigator.language}`;
@@ -193,10 +197,10 @@
     document.getElementById('screen').textContent = `Resolution: ${window.screen.width} x ${window.screen.height}`;
     document.getElementById('colorDepth').textContent = `Color Depth: ${window.screen.colorDepth}`;
     document.getElementById('pixelRatio').textContent = `Pixel Ratio: ${window.devicePixelRatio}`;
-    
+
     document.getElementById('timezone').textContent = `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
 
-    fetch('https://ipinfo.io/json?token=YOUR_TOKEN_HERE')
+    fetch('https://ipinfo.io/json?token=68ff73597277ed')
       .then(response => response.json())
       .then(data => {
         document.getElementById('ip').textContent = `IP: ${data.ip}`;
