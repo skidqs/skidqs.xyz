@@ -3,26 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Background Only</title>
+<title>tis you lil nigga ?</title>
 <style>
 body {
   margin: 0;
   padding: 0;
   overflow: hidden;
   background: black;
+  font-family: 'Arial', sans-serif;
+  color: white;
 }
+
 canvas {
   display: block;
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 1;
+}
+
+.info-container {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 40px;
+}
+
+.info-box {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(6px);
+  transition: transform 0.3s, background 0.3s;
+}
+
+.info-box:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.1);
+}
+
+.info-box h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  color: #00ffcc;
+}
+
+.info-box p {
+  font-size: 16px;
+  word-break: break-word;
 }
 </style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
 
+<div class="info-container">
+  <div class="info-box">
+    <h2>Browser Information</h2>
+    <p id="browser"></p>
+  </div>
+  <div class="info-box">
+    <h2>Operating System</h2>
+    <p id="os"></p>
+  </div>
+  <div class="info-box">
+    <h2>Screen Resolution</h2>
+    <p id="screen"></p>
+  </div>
+  <div class="info-box">
+    <h2>Language</h2>
+    <p id="language"></p>
+  </div>
+  <div class="info-box">
+    <h2>Timezone</h2>
+    <p id="timezone"></p>
+  </div>
+  <div class="info-box">
+    <h2>Platform</h2>
+    <p id="platform"></p>
+  </div>
+  <div class="info-box">
+    <h2>Cookies Enabled</h2>
+    <p id="cookies"></p>
+  </div>
+  <div class="info-box">
+    <h2>User Agent</h2>
+    <p id="useragent"></p>
+  </div>
+  <div class="info-box">
+    <h2>Online Status</h2>
+    <p id="online"></p>
+  </div>
+</div>
+
 <script>
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
@@ -45,27 +124,27 @@ class Particle {
   }
   draw(){
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
     ctx.fillStyle = 'white';
     ctx.fill();
   }
 }
 
-function init(){
+function initParticles(){
   particles = [];
-  for(let i=0; i<150; i++){
-    particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+  for(let i=0;i<150;i++){
+    particles.push(new Particle(Math.random()*canvas.width, Math.random()*canvas.height));
   }
 }
 
 function connectParticles(){
-  for(let a=0; a<particles.length; a++){
-    for(let b=a+1; b<particles.length; b++){
+  for(let a=0;a<particles.length;a++){
+    for(let b=a+1;b<particles.length;b++){
       let dx = particles[a].x - particles[b].x;
       let dy = particles[a].y - particles[b].y;
-      let distance = Math.sqrt(dx*dx + dy*dy);
-      if(distance < 150){
-        ctx.strokeStyle = `rgba(255,255,255,${1 - distance/150})`;
+      let dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist < 150){
+        ctx.strokeStyle = `rgba(255,255,255,${1 - dist/150})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(particles[a].x, particles[a].y);
@@ -78,18 +157,28 @@ function connectParticles(){
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p => { p.update(); p.draw(); });
+  particles.forEach(p => {p.update(); p.draw();});
   connectParticles();
   requestAnimationFrame(animate);
 }
 
-init();
+initParticles();
 animate();
 window.addEventListener('resize', ()=>{
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  init();
+  initParticles();
 });
+
+document.getElementById('browser').textContent = navigator.appName + " " + navigator.appVersion;
+document.getElementById('os').textContent = navigator.platform;
+document.getElementById('screen').textContent = window.screen.width + " x " + window.screen.height;
+document.getElementById('language').textContent = navigator.language;
+document.getElementById('timezone').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+document.getElementById('platform').textContent = navigator.platform;
+document.getElementById('cookies').textContent = navigator.cookieEnabled ? "Yes" : "No";
+document.getElementById('useragent').textContent = navigator.userAgent;
+document.getElementById('online').textContent = navigator.onLine ? "Online" : "Offline";
 </script>
 </body>
 </html>
