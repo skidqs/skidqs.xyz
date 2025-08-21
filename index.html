@@ -1,119 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon</title>
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>coming soon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tomorrow&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: white;
+      font-family: 'Tomorrow', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
 
-        body, html {
-            height: 100%;
-            font-family: 'Arial', sans-serif;
-            background: #121212;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 4rem;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-        }
-
-        p {
-            font-size: 1.5rem;
-            color: #bbbbbb;
-            margin-bottom: 20px;
-        }
-
-        .email-input {
-            padding: 10px 15px;
-            font-size: 1rem;
-            border: none;
-            border-radius: 5px 0 0 5px;
-            outline: none;
-        }
-
-        .subscribe-btn {
-            padding: 10px 20px;
-            font-size: 1rem;
-            border: none;
-            background: #1e88e5;
-            color: #fff;
-            cursor: pointer;
-            border-radius: 0 5px 5px 0;
-            transition: background 0.3s;
-        }
-
-        .subscribe-btn:hover {
-            background: #1565c0;
-        }
-
-        .socials {
-            margin-top: 30px;
-        }
-
-        .socials a {
-            margin: 0 10px;
-            text-decoration: none;
-            color: #bbbbbb;
-            font-size: 1.5rem;
-            transition: color 0.3s;
-        }
-
-        .socials a:hover {
-            color: #1e88e5;
-        }
-
-        @media(max-width: 500px){
-            h1 {
-                font-size: 3rem;
-            }
-
-            p {
-                font-size: 1.2rem;
-            }
-
-            .email-input, .subscribe-btn {
-                width: 100%;
-                margin: 5px 0;
-                border-radius: 5px;
-            }
-
-            .subscribe-btn {
-                border-radius: 5px;
-            }
-        }
-    </style>
+    .coming-soon {
+      position: relative;
+      z-index: 10;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .coming-soon h1 {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+    .coming-soon p {
+      font-size: 20px;
+      color: #ccc;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Coming Soon</h1>
-        <p>Our website is under construction. Stay tuned!</p>
-        
-        <div class="subscribe-form">
-            <input class="email-input" type="email" placeholder="Enter your email">
-            <button class="subscribe-btn">Notify Me</button>
-        </div>
 
-        <div class="socials">
-            <a href="#" target="_blank">🐦</a>
-            <a href="#" target="_blank">📘</a>
-            <a href="#" target="_blank">📸</a>
-        </div>
-    </div>
+  <canvas id="canvas"></canvas>
+
+  <div class="coming-soon">
+    <h1> Coming Soon </h1>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let mouse = { x: null, y: null };
+    let interactive = true;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      init();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (interactive) {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      }
+    });
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 1.2;
+        this.vy = (Math.random() - 0.5) * 1.2;
+        this.size = 2;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+      }
+    }
+
+    function connectParticles() {
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a + 1; b < particles.length; b++) {
+          let dx = particles[a].x - particles[b].x;
+          let dy = particles[a].y - particles[b].y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 150) {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 150})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(particles[b].x, particles[b].y);
+            ctx.stroke();
+          }
+        }
+        if (mouse.x && mouse.y) {
+          let dx = particles[a].x - mouse.x;
+          let dy = particles[a].y - mouse.y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 150) {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 150})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function init() {
+      particles = [];
+      for (let i = 0; i < 150; i++) {
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * canvas.height;
+        particles.push(new Particle(x, y));
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      connectParticles();
+      requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+  </script>
+
 </body>
 </html>
