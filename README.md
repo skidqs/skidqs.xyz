@@ -3,7 +3,7 @@
 This repository is currently under development.  
 Purpose and content will be decided in the future.  
 
-Stay tuned for updates!
+Visit the site (currently not in use) at [https://skidqs.xyz](https://skidqs.xyz)
 
 ---
 
